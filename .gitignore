@@ -52,6 +52,7 @@ rsconnect/
 *.hproj
 *.hobo
 *.jpeg
+*.jpg
 *.png
 *.pdf
 *.docx
