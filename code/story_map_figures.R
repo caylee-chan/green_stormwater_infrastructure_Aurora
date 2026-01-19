@@ -1,7 +1,7 @@
 # Aurora story map figs 
 # Caylee Chan
 # Created: 14 Jan 2026
-# Updated: 18 Jan 2026
+# Updated: 19 Jan 2026
 # Notes: 
 
 # Libraries:
@@ -13,6 +13,7 @@ library(emmeans)
 library(patchwork)
 library(extrafont)
 library(ggtext)
+library(ggpubr)
 
 # Set wd
 setwd("C:/Users/cayle.LAPTOP-QMLQMN4A/OneDrive - University of Illinois - Urbana/green_stormwater_infrastructure_Aurora/green_stormwater_infrastructure_Aurora")
@@ -137,9 +138,138 @@ ICB_holding_water_plot
 
 ggsave(
   plot = ICB_holding_water_plot,
-  filename = "figures/ICB_exp_holdingwater.jpeg",
+  filename = "figures/story map/ICB_exp_holdingwater.jpeg",
   device = "jpeg",
   units = "in",
   height = 6, width = 8, dpi = 300
 )
 
+
+#### RG experiment figures -----------------------------------------------------------------------------------------
+
+#### Clean raw ICB data ----
+
+# Raw data 
+rg_raw <- read.csv("data/Rain gardens/catch basin sampling/Aurora_RG_CBsamples_2013to2015.csv")
+
+# Organize raw data
+rg_clean <- rg_raw %>%
+  mutate(Inter_type = ifelse(grepl("C", Inter_ID), "Control", "Rain Garden")) %>% # Create inter_type var
+  mutate(interTypecbType = paste(Inter_type, CB_CLASS, sep = "-")) %>% # Create interTypecbType var combining the intersection type and CB type
+  mutate(EpiweekYear = paste(Epiweek, Year, sep = "-")) %>% # Create new variable combining Epiweek and Year
+  mutate(EpiweekYear = factor(EpiweekYear)) %>% # Change data type
+  subset(CB_CLASS == "C" | CB_CLASS == "RGO" | CB_CLASS == "RGI") %>% # Subset the following CB types: C, RGO, and RGI
+  subset(Area == "SE" & Year == 2015 & Epiweek %in% c(23, 25, 27, 29, 31, 33, 35)) %>% # Subset CBs in the SE area, from 2015, and in BACI Epiweeks (correspond to Epiweeks 23, 25, 27, 29, 31, 33, 35)
+  subset(Inter_ID != "R16") %>% # Remove RG16 (labeled as RG intersection but no actual RG)
+  mutate(interTypecbType = factor(interTypecbType)) %>% # Change data type
+  mutate(Inter_ID = factor(Inter_ID)) %>% # Change data type
+  mutate(CB_ID_RG = factor(CB_ID_RG)) %>% # Change data type
+  mutate(Surf_Detrit = factor(Surf_Detrit, levels = c("L", "M", "H"))) # Change data type
+
+#### Standing water presence in all catch basins  ----
+
+## Data organizing
+standingwater_all <- rg_clean %>%
+  subset(Inspected == 1) %>% # Subset observations where catch basin was inspected for the presence of standing water
+  drop_na(Dry) # Drop observations where Dry is NA
+
+# Factor for proportional stacked bar chart
+standingwater_all$Dry_factor <- factor(standingwater_all$Dry)
+
+standing_water_interTypecbType <- ggplot(standingwater_all, aes(x = interTypecbType, fill = Dry_factor)) +
+  geom_bar(position = "fill", color = "black") +
+  labs(x = "Catch Basin Type", y = "Relative Frequency") +
+  scale_fill_manual(values = c("dodgerblue1","wheat3"), labels = c("Holding\nWater", "Not Holding\nWater")) +
+  scale_x_discrete(labels = c("Control\nConventional", 
+                              "Rain Garden\nConventional",
+                              "Rain Garden\nInfiltration",
+                              "Rain Garden\nOverflow")) +
+  scale_y_continuous(expand = c(0,0), limits = c(0, 1.1), breaks = seq(0,1,0.25)) +
+  #annotate("text", x = 1, y = 1.02, label = expression(italic(n) == 421), size = N_size_size, family = "HelveticaNeueforSAS") +
+  #annotate("text", x = 2, y = 1.02, label = expression(italic(n) == 128), size = N_size_size, family = "HelveticaNeueforSAS") +
+  #annotate("text", x = 3, y = 1.02, label = expression(italic(n) == 985), size = N_size_size, family = "HelveticaNeueforSAS") +
+  #annotate("text", x = 4, y = 1.02, label = expression(italic(n) == 221), size = N_size_size, family = "HelveticaNeueforSAS") +
+  annotate("text", x = 1, y = 1.07, label = "Control Intersection", size = 5, family = "HelveticaNeueforSAS") +
+  annotate("text", x = 3, y = 1.07, label = "Rain Garden Intersection", size = 5, family = "HelveticaNeueforSAS") +
+  geom_bracket(data = standingwater_all, xmin = 1.55, xmax = 4.45, y.position = 1.04, label = "", tip.length = c(0.5, 0.5)) + # RG Intersection grouping
+  geom_bracket(data = standingwater_all, xmin = 0.55, xmax = 1.45, y.position = 1.04, label = "", tip.length = c(0.5, 0.5)) + # Control Intersection grouping
+  figtheme + theme(legend.title = element_blank())#, legend.key.size = unit(4, "mm"))
+
+
+standing_water_interTypecbType
+
+ggsave(
+  plot = standing_water_interTypecbType,
+  filename = "figures/story map/RG_holdingwater.jpeg",
+  device = "jpeg",
+  units = "in",
+  height = 6, width = 8, dpi = 300
+)
+
+#### Data organizing for analyses involving juvenile mosquitoes ----
+
+wet_CBs <- rg_clean %>% 
+  subset(Dry == 0 & Sampled == 1) %>% # Select catch basins that were holding water and were sampled for juvenile mosquitoes
+  mutate(interTypecbType = as.character(interTypecbType)) %>% # Change data type for subsetting
+  subset(interTypecbType != "Rain Garden-RGI") %>% # Drop single obs where a RGI was holding water and sampled for mosquitoes
+  mutate(interTypecbType = factor(interTypecbType)) # Convert back to factor
+
+# Create new column for positive for juvenile mosquitoes (1 = positive for juvenile mosquitoes; 0 = negative for juvenile mosquitoes)
+# All columns are 0: juvenile_pos == 1
+# All columns are NA: juvenile_pos == 1
+# Some columns are NA but the rest are 0: juvenile_pos == 1
+# Some columns are NA but at least one non-NA column isn’t 0: juvenile_pos == 0
+# At least one column isn’t equal to 0: juvenile_pos == 0
+juv_mos_cols <- c("L1L3_adj", "L4_Cx_total", "P_Cx_Cx_adj", "Other_adj")
+
+wet_CBs$juvenile_pos <- apply(wet_CBs[, juv_mos_cols], 1, function(row) {
+  
+  # Captures all NULL values
+  if (all(is.na(row))) {
+    return(1)
+  }
+  
+  # Captures all 0 values &  some NULL but all non-NULL are zero
+  if (all(row[!is.na(row)] == 0)) {
+    return(1)
+  }
+  
+  # Captures at least one non-zero value & some NULL but at least one non-NULL !0
+  return(0)
+})
+
+#### Juvenile mosquito presence in all catch basin analysis ----
+
+## Data for juvenile mosquito presence analysis in all catch basins
+mosquitoes_all <- wet_CBs
+
+#### Visualize juvenile mosquito presence ----
+mosquitoes_all$juvenile_pos_factor <- factor(mosquitoes_all$juvenile_pos)
+
+
+juvenile_pos_interTypecbType <- ggplot(mosquitoes_all, aes(x = interTypecbType, fill = juvenile_pos_factor)) +
+  geom_bar(position = "fill", color = "black") +
+  labs(x = "Catch Basin Type", y = "Relative Frequency") +
+  scale_fill_manual(values = c("firebrick4","wheat3"), labels = c("Holding\nJuvenile Mosquitoes", "Not Holding\nJuvenile Mosquitoes")) +
+  scale_x_discrete(labels = c("Control\nConventional", 
+                              "Rain Garden\nConventinoal",
+                              "Rain Garden Overflow")) +
+  scale_y_continuous(expand = c(0,0), limits = c(0,1.1), breaks = seq(0,1,0.25)) +
+  #annotate("text", x = 1, y = 1.02, label = expression(italic(n) == 109), size = N_size_size, family = "HelveticaNeueforSAS") +
+  #annotate("text", x = 2, y = 1.02, label = expression(italic(n) == 22), size = N_size_size, family = "HelveticaNeueforSAS") +
+  #annotate("text", x = 3, y = 1.02, label = expression(italic(n) == 83), size = N_size_size, family = "HelveticaNeueforSAS") +
+  annotate("text", x = 1, y = 1.07, label = "Control Intersection", size = 5, family = "HelveticaNeueforSAS") +
+  annotate("text", x = 2.5, y = 1.07, label = "Rain Garden Intersection", size = 5, family = "HelveticaNeueforSAS") +
+  geom_bracket(data = mosquitoes_all, xmin = 1.55, xmax = 3.45, y.position = 1.04, label = "", tip.length = c(0.5, 0.5)) + # RG Intersection grouping
+  geom_bracket(data = mosquitoes_all, xmin = 0.55, xmax = 1.45, y.position = 1.04, label = "", tip.length = c(0.5, 0.5)) + # Control Intersection grouping
+  figtheme + theme(legend.title = element_blank())#, legend.key.size = unit(4, "mm"))
+
+juvenile_pos_interTypecbType
+
+ggsave(
+  plot = juvenile_pos_interTypecbType,
+  filename = "figures/story map/RG_holdingmosquitoes.jpeg",
+  device = "jpeg",
+  units = "in",
+  height = 6, width = 8, dpi = 300
+)
