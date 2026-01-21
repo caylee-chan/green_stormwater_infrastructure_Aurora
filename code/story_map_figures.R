@@ -1,7 +1,7 @@
 # Aurora story map figs 
 # Caylee Chan
 # Created: 14 Jan 2026
-# Updated: 19 Jan 2026
+# Updated: 21 Jan 2026
 # Notes: 
 
 # Libraries:
@@ -14,6 +14,8 @@ library(patchwork)
 library(extrafont)
 library(ggtext)
 library(ggpubr)
+library(survival)
+library(survminer)
 
 # Set wd
 setwd("C:/Users/cayle.LAPTOP-QMLQMN4A/OneDrive - University of Illinois - Urbana/green_stormwater_infrastructure_Aurora/green_stormwater_infrastructure_Aurora")
@@ -272,4 +274,162 @@ ggsave(
   device = "jpeg",
   units = "in",
   height = 6, width = 8, dpi = 300
+)
+
+#### Survival analysis figures -----------------------------------------------------------------------------------------
+
+# Set theme
+survtheme <- theme(
+  strip.background = element_blank(),
+  panel.background = element_blank(),
+  axis.line = element_blank(),
+  axis.ticks = element_line(colour = 'black', linewidth = 0.3), 
+  axis.title.x = element_text(size = 18, color="black", face = "bold", family = "HelveticaNeueforSAS"), 
+  axis.title.y = element_text(size = 18, color="black", face = "bold", family = "HelveticaNeueforSAS"), 
+  axis.text.x = element_text(size = 12, color="black", family = "HelveticaNeueforSAS"), 
+  axis.text.y = element_text(size = 12, color="black", family = "HelveticaNeueforSAS"),
+  panel.border = element_rect(colour = "black", fill = NA, linewidth = 0.5),
+  legend.title = element_blank(),
+  legend.text = element_text(size = 14), 
+  legend.position = "top",
+  #plot.title = element_text(size = 7, face = "bold", family = "HelveticaNeueforSAS")
+)
+
+
+#### Clearn raw longevity data ----
+
+# Raw data
+starv_raw <- read.csv("data/Rain gardens/pupal sampling/starvation_resistance/Aurora_2015_starvation_resistance_20241007.csv")
+
+## Data organizing
+starv_raw <- starv_raw %>%
+  mutate(CB_Class = factor(CB_Class)) %>%
+  mutate(CBID = factor(CBID)) %>%
+  mutate(Epiweek = factor(Epiweek))
+
+# Females
+females <- starv_raw %>%
+  subset(Species == "Cx. pipiens" & Sex == "F") %>% # Select only Cx. pipiens and females
+  drop_na(Survival_days, Winglength_mm) # Drop obs with missing survival days and wing length
+
+females$status <- ifelse(!is.na(females$Survival_days), 1, 0) # status = 1 died by completion of study; status = 0 didn't die by completion of the study (censored)
+
+# Males
+males <- starv_raw %>%
+  subset(Species == "Cx. pipiens" & Sex == "M") %>% # Select only Cx. pipiens and males
+  drop_na(Survival_days, Winglength_mm) # Drop obs with missing survival days
+
+males$status <- ifelse(!is.na(males$Survival_days), 1, 0) # status = 1 died by completion of study; status = 0 didn't die by completion of the study (censored)
+
+# Female longevity plot
+femaleSurvCurve <- survfit(Surv(Survival_days, status) ~ CB_Class, data = females)
+
+femaleSurvCurvePlot <- ggsurvplot(femaleSurvCurve,
+                                  break.x.by = 0.5,
+                                  axes.offset = FALSE,
+                                  conf.int = TRUE,
+                                  xlim = c(0,7),
+                                  risk.table = FALSE,
+                                  size = 0.5,
+                                  legend.labs = c("Conventional\nCatch Basin", "Rain Garden Overflow\nCatch Basin"),
+                                  palette = c("grey27", "green4"),
+                                  ggtheme = survtheme) 
+
+femaleSurvCurvePlot <- femaleSurvCurvePlot$plot + 
+  xlab("Time (Days)") +
+  ylab("Survival Probability") +
+  scale_y_continuous(limits = c(0,1.01), breaks = seq(0,1,0.25)) +
+  annotate("text", x = 1, y = 0.41, label = "Females", size = 5, family = "HelveticaNeueforSAS") +
+  #annotate("rect", xmin = 0.61, xmax = 1.39, ymin = 0.28, ymax = 0.32, fill = "grey27", alpha = 0.3) + # CCB
+  #annotate("rect", xmin = 0.61, xmax = 1.39, ymin = 0.23, ymax = 0.27, fill = "green4", alpha = 0.3) + # RGO
+  #annotate("text", x = 1, y = 0.3, label = expression(italic(n) == 188), size = N_size_size, family = "HelveticaNeueforSAS") + # CCB
+  #annotate("text", x = 1, y = 0.25, label = expression(italic(n) == 157), size = N_size_size, family = "HelveticaNeueforSAS") + # RGO
+  theme(
+    legend.position = "bottom"
+  )
+
+femaleSurvCurvePlot
+
+# Male longevity plot
+maleSurvCurve <- survfit(Surv(Survival_days, status) ~ CB_Class, data = males)
+
+maleSurvCurvePlot <- ggsurvplot(maleSurvCurve,
+                                break.x.by = 0.5,
+                                axes.offset = FALSE,
+                                conf.int = TRUE,
+                                xlim = c(0,7),
+                                risk.table = FALSE,
+                                size = 0.5,
+                                legend.labs = c("Conventional\nCatch Basin", "Rain Garden Overflow\nCatch Basin"),
+                                palette = c("grey27", "green4"),
+                                ggtheme = survtheme) 
+
+maleSurvCurvePlot <- maleSurvCurvePlot$plot + 
+  xlab("Time (Days)") +
+  ylab("Survival Probability") +
+  scale_y_continuous(limits = c(0,1.01), breaks = seq(0,1,0.25)) +
+  annotate("text", x = 1, y = 0.41, label = "Males", size = 5, family = "HelveticaNeueforSAS") + 
+  #annotate("rect", xmin = 0.61, xmax = 1.39, ymin = 0.28, ymax = 0.32, fill = "grey27", alpha = 0.3) + # CCB
+  #annotate("rect", xmin = 0.61, xmax = 1.39, ymin = 0.23, ymax = 0.27, fill = "green4", alpha = 0.3) + # RGO
+  #annotate("text", x = 1, y = 0.3, label = expression(italic(n) == 185), size = N_size_size, family = "HelveticaNeueforSAS") +
+  #annotate("text", x = 1, y = 0.25, label = expression(italic(n) == 142), size = N_size_size, family = "HelveticaNeueforSAS") +
+  theme(
+    legend.position = "bottom"
+  )
+
+maleSurvCurvePlot
+
+# Combine longevity plots
+longevity_combined <- ((femaleSurvCurvePlot | maleSurvCurvePlot)) +
+  plot_layout(guides = "collect", axis_titles = "collect") &
+  #plot_annotation(tag_levels = "a") &
+  theme(legend.position = "bottom")#), plot.tag.position = c(0.02, 1.01), plot.tag = element_text(size = 9, face = "bold", family = "HelveticaNeueforSAS"))
+
+longevity_combined
+
+ggsave(
+  plot = longevity_combined,
+  filename = "figures/story map/longevity_combined.jpeg",
+  device = "jpeg",
+  units = "in",
+  height = 6, width = 12, dpi = 300
+)
+
+#### Wing length figures -----------------------------------------------------------------------------------------
+
+# Raw winglength data
+raw_wing <- read.csv("data/Rain gardens/pupal sampling/starvation_resistance/Aurora_2015_starvation_resistance_20241007.csv")
+
+# Subset Cx. pipiens and remove NA wing lengths
+wing_clean_all <- raw_wing %>%
+  filter(!is.na(Winglength_mm)) %>%
+  subset(Species == "Cx. pipiens") 
+
+# Wing length figure
+winglength <- ggplot(wing_clean_all, aes(x = Sex, y = Winglength_mm, fill = CB_Class, color = CB_Class)) +
+  stat_boxplot(geom = "errorbar", width = 0.25, position = position_dodge(0.9), lwd = 0.25) +
+  geom_boxplot(outlier.size = 0.25, lwd = 0.25, width = 0.75, outlier.shape = 19, position = position_dodge(0.9)) +  
+  scale_fill_manual(values = c("grey27", "green4"), labels = c("Conventional\nCatch Basin", "Rain Garden Overflow\nCatch Basin")) +
+  scale_color_manual(values = c("black", "black", "black"), labels = c("Conventional\nCatch Basin", "Rain Garden Overflow\nCatch Basin")) +
+  scale_x_discrete(labels = c("Females", "Males")) +
+  scale_y_continuous(expand = c(0,0), limits = c(1.6,4.75), breaks = seq(1.5, 4.5, 0.5)) +
+  labs(x = "Sex", y = "Wing Length (mm)") +
+  #annotate("text", x = 0.79, y = 1.8, label = expression(italic(n) == 189), size = N_size_size, family = "HelveticaNeueforSAS") +
+  #annotate("text", x = 1.23, y = 1.8, label = expression(italic(n) == 157), size = N_size_size, family = "HelveticaNeueforSAS") +
+  #annotate("text", x = 1.79, y = 1.8, label = expression(italic(n) == 185), size = N_size_size, family = "HelveticaNeueforSAS") +
+  #annotate("text", x = 2.23, y = 1.8, label = expression(italic(n) == 142), size = N_size_size, family = "HelveticaNeueforSAS") +
+  figtheme +
+  theme(
+    legend.position = "bottom",
+    legend.title = element_blank()
+  )
+
+winglength
+
+ggsave(
+  plot = winglength,
+  filename = "figures/story map/winglength.jpeg",
+  device = "jpeg",
+  units = "in",
+  height = 6, width = 10, dpi = 300
 )
