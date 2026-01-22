@@ -1,7 +1,7 @@
 # Aurora story map figs 
 # Caylee Chan
 # Created: 14 Jan 2026
-# Updated: 21 Jan 2026
+# Updated: 22 Jan 2026
 # Notes: 
 
 # Libraries:
@@ -432,4 +432,12 @@ ggsave(
   device = "jpeg",
   units = "in",
   height = 6, width = 10, dpi = 300
+)
+
+ggsave(
+  plot = winglength,
+  filename = "figures/story map/winglength2.jpeg",
+  device = "jpeg",
+  units = "in",
+  height = 6, width = 6, dpi = 300
 )
