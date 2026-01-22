@@ -20,10 +20,7 @@ library(extrafont)
 
 
 # Set wd
-library(here)
-i_am("code/final_code/ICB_analyses.R")
-setwd("C:/Users/cayle.LAPTOP-QMLQMN4A/OneDrive - University of Illinois - Urbana/Aurora/Aurora_analysis")
-
+setwd("C:/Users/cayle.LAPTOP-QMLQMN4A/OneDrive - University of Illinois - Urbana/green_stormwater_infrastructure_Aurora/green_stormwater_infrastructure_Aurora")
 
 #### Specify plotting elements ----
 
@@ -268,16 +265,7 @@ holdingwater_fig <- ggplot(standingwater_figuredata, aes(x = Time, y = prop_NOT_
   annotate("text", x = 2.3, y = -0.04, label = expression(italic(n) == 392), size = N_size_size, family = "HelveticaNeueforSAS") +
   figtheme 
 
-holdingwater_fig                            
-
-# Save to Aurora OneDrive folder
-ggsave(
-  plot = holdingwater_fig,
-  filename = "output/custom size final figs/exp1_holdingwater.png",
-  device = "png",
-  units = "cm", 
-  height = 15, width = 15, dpi = 300
-)
+holdingwater_fig                          
 
 
 #### Data organizing for analyses involving juvenile mosquitoes ----
@@ -519,14 +507,6 @@ mosquitoes_fig <- ggplot(mosquitoesfigure_data, aes(x = Time, y = prop_NOT_holdi
 
 mosquitoes_fig
 
-# Save to Aurora OneDrive folder
-ggsave(
-  plot = mosquitoes_fig,
-  filename = "output/custom size final figs/exp1_holdingmosquitoes.png",
-  device = "png",
-  units = "cm", 
-  height = 15, width = 15, dpi = 300
-)
 
 #### Standing water depth analysis ----
 
@@ -697,29 +677,10 @@ waterdepth_fig <- ggplot(waterdepthfigure_data, aes(x = Time, y = avg_waterdepth
 
 waterdepth_fig
 
-# Save to Aurora OneDrive folder
 ggsave(
   plot = waterdepth_fig,
-  filename = "output/custom size final figs/exp1_water depth.png",
-  device = "png",
-  units = "cm", 
-  height = 15, width = 15, dpi = 300
-)
-
-
-# Save to Aurora box folder
-ggsave(
-  plot = waterdepth_fig,
-  filename = "C:/Users/cayle.LAPTOP-QMLQMN4A/Box/GI-Aurora/manuscript/figures/supplement figures/Exp1_waterdepth.pdf",
-  device ="pdf",
-  units = "mm",
-  height = 100, width = 88, dpi = 300
-)
-
-ggsave(
-  plot = waterdepth_fig,
-  filename = "C:/Users/cayle.LAPTOP-QMLQMN4A/Box/GI-Aurora/manuscript/figures/supplement figures/Exp1_waterdepth.png",
-  device ="png",
+  filename = "figures/manuscript/Exp1_waterdepth.jpeg",
+  device ="jpeg",
   units = "mm",
   height = 100, width = 88, dpi = 300
 )
@@ -1766,23 +1727,15 @@ L1L3_fig <- ggplot(L1L3figure_data, aes(x = Time, y = avg_L1L3, fill = AreaCB_Rc
 
 L1L3_fig
 
-
-# Save to Aurora Box folder
 ggsave(
   plot = L1L3_fig,
-  filename = "C:/Users/cayle.LAPTOP-QMLQMN4A/Box/GI-Aurora/manuscript/figures/supplement figures/Exp1_L1L3abundance.pdf",
-  device ="pdf",
+  filename = "figures/manuscript/Exp1_L1L3abundance.jpeg",
+  device ="jpeg",
   units = "mm",
   height = 100, width = 88, dpi = 300
 )
 
-ggsave(
-  plot = L1L3_fig,
-  filename = "C:/Users/cayle.LAPTOP-QMLQMN4A/Box/GI-Aurora/manuscript/figures/supplement figures/Exp1_L1L3abundance.png",
-  device ="png",
-  units = "mm",
-  height = 100, width = 88, dpi = 300
-)
+
 
 #### Average L4 Abundance by Epiweek ----
 
@@ -1846,19 +1799,10 @@ pupae_fig_outlierremoved <- ggplot(pupaefigure_outlier_removed, aes(x = Time, y 
 
 pupae_fig_outlierremoved
 
-# Save to Aurora Box folder
 ggsave(
   plot = pupae_fig_outlierremoved,
-  filename = "C:/Users/cayle.LAPTOP-QMLQMN4A/Box/GI-Aurora/manuscript/figures/supplement figures/Exp1_pupaeabundance_no_outlier.pdf",
-  device ="pdf",
-  units = "mm",
-  height = 100, width = 88, dpi = 300
-)
-
-ggsave(
-  plot = pupae_fig_outlierremoved,
-  filename = "C:/Users/cayle.LAPTOP-QMLQMN4A/Box/GI-Aurora/manuscript/figures/supplement figures/Exp1_pupaeabundance_no_outlier.png",
-  device ="png",
+  filename = "figures/manuscript/Exp1_pupaeabundance_no_outlier.jpeg",
+  device ="jpeg",
   units = "mm",
   height = 100, width = 88, dpi = 300
 )
@@ -1868,7 +1812,7 @@ ggsave(
 
 Fig3 <- holdingwater_fig + mosquitoes_fig + combined_fig + L4_fig +
   plot_layout(guides = "collect", axis_titles = "collect") +
-  plot_annotation(tag_levels = "a", caption = "Treatment ICBs refers to catch basins that were CCBs in the pre-construction period and ICBs in the post-construction period.") &
+  plot_annotation(tag_levels = "a") &#, caption = "Treatment ICBs refers to catch basins that were CCBs in the pre-construction period and ICBs in the post-construction period.") &
   theme(legend.position = "bottom", 
         plot.tag.position = c(0.02, 1.01), 
         plot.tag = element_text(size = 9, face = "bold", family = "HelveticaNeueforSAS"),
@@ -1887,35 +1831,12 @@ Fig3
 
 ggsave(
   plot = Fig3,
-  filename = "C:/Users/cayle.LAPTOP-QMLQMN4A/Box/GI-Aurora/manuscript/figures/Figure3.pdf",
-  device ="pdf",
+  filename = "figures/manuscript/Figure3.jpeg",
+  device ="jpeg",
   units = "mm",
   height = 185, width = 180, dpi = 300
 )
 
-ggsave(
-  plot = Fig3,
-  filename = "C:/Users/cayle.LAPTOP-QMLQMN4A/Box/GI-Aurora/manuscript/figures/Figure3.png",
-  device ="png",
-  units = "mm",
-  height = 185, width = 180, dpi = 300
-)
-
-# L1L3 and pupae figs
-L1L3_pupal_abundance <- (L1L3_fig / pupae_fig_outlierremoved) +
-  plot_layout(guides = "collect", axis_titles = "collect") +
-  plot_annotation(tag_levels = "a") &
-  theme(legend.position = "bottom", legend.title.position = "left", plot.tag.position = c(0.02, 1.01), plot.tag = element_text(size = 9, face = "bold", family = "HelveticaNeueforSAS")) 
-L1L3_pupal_abundance
-
-# Save to Aurora OneDrive folder
-ggsave(
-  plot = L1L3_pupal_abundance,
-  filename = "output/custom size final figs/exp1_L1L3_pupal_abundance.png",
-  device = "png",
-  units = "cm", 
-  height = 30, width = 15, dpi = 300
-)
 
 #### Compare combined juvenile abundance among treatment CCBs in the pre- and post-construction periods ----
 
@@ -1988,16 +1909,10 @@ paired_trt_CCBs_abundance
 
 ggsave(
   plot = paired_trt_CCBs_abundance,
-  filename = "C:/Users/cayle.LAPTOP-QMLQMN4A/Box/GI-Aurora/manuscript/figures/supplement figures/Exp1_paired_trt_CCBs_combinedabundance.pdf",
-  device ="pdf",
+  filename = "figures/manuscript/Exp1_paired_trt_CCBs_combinedabundance.jpeg",
+  device ="jpeg",
   units = "mm",
   height = 100, width = 88, dpi = 300
 )
 
-ggsave(
-  plot = paired_trt_CCBs_abundance,
-  filename = "C:/Users/cayle.LAPTOP-QMLQMN4A/Box/GI-Aurora/manuscript/figures/supplement figures/Exp1_paired_trt_CCBs_combinedabundance.png",
-  device ="png",
-  units = "mm",
-  height = 100, width = 88, dpi = 300
-)
+
