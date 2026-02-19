@@ -460,7 +460,7 @@ juvenile_pos_interTypecbType <- ggplot(mosquitoes_all, aes(x = interTypecbType, 
   labs(x = "Catch Basin Type", y = "Relative Frequency") +
   scale_fill_manual(values = c("firebrick4","wheat3"), labels = c("Holding\nJuvenile Mosquitoes", "Not Holding\nJuvenile Mosquitoes")) +
   scale_x_discrete(labels = c("Control\nConventional", 
-                              "Rain Garden\nConventinoal",
+                              "Rain Garden\nConventional",
                               "Rain Garden Overflow")) +
   scale_y_continuous(expand = c(0,0), limits = c(0,1.1), breaks = seq(0,1,0.25)) +
   annotate("text", x = 1, y = 1.02, label = expression(italic(n) == 109), size = N_size_size, family = "HelveticaNeueforSAS") +
