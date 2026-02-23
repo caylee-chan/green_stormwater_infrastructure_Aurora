@@ -1,7 +1,7 @@
 # Aurora story map figs 
 # Caylee Chan
 # Created: 14 Jan 2026
-# Updated: 22 Jan 2026
+# Updated: 23 Feb 2026
 # Notes: 
 
 # Libraries:
@@ -64,10 +64,11 @@ icb_clean <- icb_raw %>% # Select CBs of interest
 # Data for standing water analyses
 standingwater <- icb_clean %>%
   subset(Inspected == 1) %>% # Select catch basins that were inspected for standing water presence
-  drop_na(Dry) # Drop obs where standing water presence was NA
+  drop_na(Dry) %>% # Drop obs where standing water presence was NA
+  mutate(Dry_new = ifelse(Dry == 0, 1, 0)) # Flip success for story map figures
 
 ## Mixed effects logistic regression model
-# Response variable: Dry (0 = water present; 1 = no water present)
+# Response variable: Dry_new (0 = no water present; 1 = water present)
 
 # Predictor variables:
 # NSA_TMIN_C
@@ -81,7 +82,7 @@ standingwater <- icb_clean %>%
 # EpiweekYear
 
 # Check data types
-str(standingwater$Dry)
+str(standingwater$Dry_new)
 str(standingwater$NSA_TMIN_C)
 str(standingwater$NS_PRCP_mm_sum_Lag4)
 str(standingwater$AreaCB_Rclass)
@@ -93,7 +94,7 @@ str(standingwater$EpiweekYear)
 options(contrasts = c("contr.sum","contr.poly")) 
 
 # SELECTED MODEL: Reduced model 1: dropped temp var
-red_model1_water_pres <- glmmTMB(Dry ~ NS_PRCP_mm_sum_Lag4 + AreaCB_Rclass + Time + AreaCB_Rclass*Time + (1|CB_ID) + (1|EpiweekYear),
+red_model1_water_pres <- glmmTMB(Dry_new ~ NS_PRCP_mm_sum_Lag4 + AreaCB_Rclass + Time + AreaCB_Rclass*Time + (1|CB_ID) + (1|EpiweekYear),
                                  data = standingwater,
                                  family = binomial(link= "logit"))
 
@@ -128,17 +129,134 @@ ICB_holding_water_plot <- emmip(object = em_water_pres,
   labs(color = "") +
   scale_y_continuous(expand = c(0,0), breaks = seq(0,1,0.25), limits = c(-0.015,1.1)) +
   scale_x_discrete(labels = c("Pre","Post")) +
-  ylab("Estimated Probability of a Catch <br>Basin <span style='color:#FF0000;'>Not</span> Holding Water") +
+  #ylab("Estimated Probability of a Catch <br>Basin <span style='color:#FF0000;'>Not</span> Holding Water") +
+  ylab("Estimated Probability of a\nCatch Basin Holding Water") +
   xlab("Construction Period") +
   #xlab("") +
-  figtheme + theme(legend.text = element_markdown(),
-                   axis.title.y = element_markdown())
+  figtheme + theme(legend.text = element_markdown()) #,axis.title.y = element_markdown())
 
 ICB_holding_water_plot
 
 ggsave(
   plot = ICB_holding_water_plot,
   filename = "figures/story map/ICB_exp_holdingwater.jpeg",
+  device = "jpeg",
+  units = "in",
+  height = 6, width = 8, dpi = 300
+)
+
+#### Holding juvenile mosquitoes presence ----
+
+wet_CBs <- icb_clean %>% 
+  subset(Dry == 0 & Sampled == 1) # Select catch basins that were holding water and were sampled for juvenile mosquitoes
+
+# Verify that samples that weren't processed were field neg and should have 0s in the juvenile mosquito-related columns
+
+# Subset wet CBs where Processed == 0 (samples WEREN'T processed)
+processed0 <- subset(wet_CBs, Processed == 0)
+
+# Subset CBs in processed0 where all juvenile mosquito-related cols are NULL
+juv_mos_cols <- c("L1L3_adj", "L4_Cx_total", "P_Cx_Cx_adj", "Other_adj")
+
+# Checks each row to see if all values are NA in the juv_mos_cols
+processed0_all_null <- processed0[apply(processed0[juv_mos_cols], 1, function(x) all(is.na(x))), ]
+
+# Verify that the lengths of these two dataframes are the same
+# This means that all wet CBs with NA for all juvenile mosquito-related columns are NEGATIVE for juvenile mosquitoes
+# Aka because they were field negative, they weren't ever processed
+length(processed0) == length(processed0_all_null)
+
+# Create new column for positive for juvenile mosquitoes (1 = positive for juvenile mosquitoes; 0 = negative for juvenile mosquitoes)
+# All columns are 0: juvenile_pos == 1
+# All columns are NA: juvenile_pos == 1
+# Some columns are NA but the rest are 0: juvenile_pos == 1
+# Some columns are NA but at least one non-NA column isn’t 0: juvenile_pos == 0
+# At least one column isn’t equal to 0: juvenile_pos == 0
+
+wet_CBs$juvenile_pos <- apply(wet_CBs[, juv_mos_cols], 1, function(row) {
+  
+  # Captures all NULL values
+  if (all(is.na(row))) {
+    return(1)
+  }
+  
+  # Captures all 0 values & some NULL but all non-NULL are zero
+  if (all(row[!is.na(row)] == 0)) {
+    return(1)
+  }
+  
+  # Captures at least one non-zero value & some NULL but at least one non-NULL !0
+  return(0)
+})
+
+# Verify that there are no NULL values in newly created juvenile_pos column
+any(is.na(wet_CBs$juvenile_pos))
+
+# Data for juvenile mosquito presence analysis
+holdingmosquitoes <- wet_CBs %>%
+  mutate(juvenile_pos_new = ifelse(juvenile_pos == 0, 1, 0)) # Flip success variable to be holding mosquitoes for story mpa fig
+
+## Mixed effects logistic regression model
+# Response variable: juvenile_pos_new (1 = mosquitoes present; 0 = no mosquitoes present)
+
+# Predictor variables:
+# NSA_TMAX_C
+# NS_PRCP_mm_sum_d0_d4 
+# AreaCB_Rclass
+# Time
+# AreaCB_Rclass * Time
+
+# Random effects
+# CB_ID
+# EpiweekYear
+
+# Check data types
+str(holdingmosquitoes$juvenile_pos_new)
+str(holdingmosquitoes$NSA_TMAX_C)
+str(holdingmosquitoes$NS_PRCP_mm_sum_d0_d4)
+str(holdingmosquitoes$AreaCB_Rclass)
+str(holdingmosquitoes$Time)
+str(holdingmosquitoes$CB_ID)
+str(holdingmosquitoes$EpiweekYear)
+
+# Set contrasts
+options(contrasts = c("contr.sum","contr.poly")) # Comparisons to the grand mean, NOT to only one baseline (reference) level
+
+# Full model
+full_model_mos_pres <- glmmTMB(juvenile_pos_new ~ NSA_TMAX_C + NS_PRCP_mm_sum_d0_d4 + AreaCB_Rclass + Time + AreaCB_Rclass*Time + (1|CB_ID) + (1|EpiweekYear),
+                               data = holdingmosquitoes,
+                               family = binomial(link= "logit"))
+
+# By Time by AreaCB_Rclass
+emobject_mos_pres <- emmeans(full_model_mos_pres, ~ AreaCB_Rclass*Time, type = "response", adjust = "sidak")
+contrast(emobject_mos_pres, "revpairwise", by = "Time", type = "response", adjust = "sidak")
+
+# Plot
+ICB_holding_mosquitoes_plot <- emmip(object = emobject_mos_pres, 
+                                formula = AreaCB_Rclass ~ Time, 
+                                CIs = TRUE,
+                                engine = "ggplot",
+                                linearg = linearg,
+                                dotarg = dotarg,
+                                CIarg = CIarg) +
+  scale_color_manual(values = legend_colors, labels = legend_labs) +
+  #scale_linetype_manual(values = c("solid", "solid", "solid"), labels = legend_labs, guide = "none", size = 1) +
+  #scale_size_manual(values = c(2,2,2), labels = legend_labs, guide = "none") +
+  #aes(linetype = AreaCB_Rclass, size = AreaCB_Rclass, color = AreaCB_Rclass) +
+  labs(color = "") +
+  scale_y_continuous(expand = c(0,0), breaks = seq(0,1,0.25), limits = c(-0.015,1.1)) +
+  scale_x_discrete(labels = c("Pre","Post")) +
+  #ylab("Estimated Probability of a Catch <br>Basin <span style='color:#FF0000;'>Not</span> Holding Water") +
+  ylab("Estimated Probability of a Catch\nBasin Holding Juvenile Mosquitoes") +
+  xlab("Construction Period") +
+  #xlab("") +
+  figtheme + theme(legend.text = element_markdown()) 
+
+ICB_holding_mosquitoes_plot
+
+ggsave(
+  plot = ICB_holding_mosquitoes_plot,
+  filename = "figures/story map/ICB_exp_holdingmosquitoes.jpeg",
   device = "jpeg",
   units = "in",
   height = 6, width = 8, dpi = 300
