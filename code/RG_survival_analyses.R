@@ -274,6 +274,7 @@ maleSurvCurvePlot
 
 #### Combination figures ----
 
+## Winglength
 # Raw winglength data
 raw_wing <- read.csv("data/Rain gardens/pupal sampling/starvation_resistance/Aurora_2015_starvation_resistance_20241007.csv")
 
@@ -329,13 +330,48 @@ winglength <- ggplot(wing_clean_all, aes(x = Sex, y = Winglength_mm, fill = CB_C
 
 winglength
 
+## Diapause
+# Raw diapause data
+diapause <- read.csv("data/Rain gardens/pupal sampling/diapause/Aurora_2015_diapause_data_20241203_w_watertemp.csv")
+
+# Diapause data organizing
+diapause <- diapause %>%
+  mutate(CB_CLASS = factor(CB_CLASS)) %>%
+  mutate(CB_ID = factor(CB_ID)) 
+
+diapause %>%
+  group_by(CB_CLASS) %>%
+  summarise(
+    total_obs = n(),
+    total_indiapause = sum(Diapause == 1),
+    percent_indiapause = (total_indiapause / total_obs) * 100
+  )
+
+diapause$Diapause_factor <- factor(diapause$Diapause, levels = c(1, 0), labels = c("Diapausing Female", "Non-diapausing Female"))
+str(diapause$Diapause_factor)
+
+diapause_viz <- ggplot(diapause, aes(x = CB_CLASS, fill = Diapause_factor)) +
+  geom_bar(position = "fill", color = "black") +
+  labs(x = "Catch Basin Type", y = "Relative Frequency") +
+  scale_fill_manual(values = c("green4", "grey57")) + 
+  scale_x_discrete(labels = c("Conventional\nCatch Basin", "Rain Garden Overflow\nCatch Basin")) +
+  scale_y_continuous(expand = c(0,0), limits = c(0,1.05)) +
+  annotate("text", x = 1, y = 1.02, label = expression(italic(n) == 77), size = N_size_size, family = "HelveticaNeueforSAS") +
+  annotate("text", x = 2, y = 1.02, label = expression(italic(n) == 67), size = N_size_size, family = "HelveticaNeueforSAS") +
+  figtheme + theme(legend.key.size = unit(4, "mm")) +
+  theme(
+    legend.position = "top"
+  )
+
+diapause_viz
+
 Fig6_top <- ((femaleSurvCurvePlot | maleSurvCurvePlot)) +
   plot_layout(guides = "collect", axis_titles = "collect") +
   plot_annotation(tag_levels = "a") &
   theme(legend.position = "bottom", plot.tag.position = c(0.02, 1.01), plot.tag = element_text(size = 9, face = "bold", family = "HelveticaNeueforSAS"))
 
-Fig6 <- Fig6_top / winglength +
-  plot_layout(guides = "collect", axis_titles = "collect") +
+Fig6 <- Fig6_top / (winglength | diapause_viz) +
+  #plot_layout(guides = "collect", axis_titles = "collect") +
   plot_annotation(tag_levels = "a") &
   theme(legend.position = "bottom", plot.tag.position = c(0.02, 1.01), plot.tag = element_text(size = 9, face = "bold", family = "HelveticaNeueforSAS"))
 

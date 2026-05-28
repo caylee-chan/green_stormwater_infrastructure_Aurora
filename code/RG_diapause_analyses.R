@@ -280,6 +280,7 @@ plotQQunif(simulationOutput_diapause) # Left plot
 plotResiduals(simulationOutput_diapause) # Right plot
 
 #### Plot ----
+# Updated to include in four panel figure with wing length and survival figures
 diapause %>%
   group_by(CB_CLASS) %>%
   summarise(
