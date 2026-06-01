@@ -1,7 +1,7 @@
 # Experiment #2: Water quality & wing length analysis
 # Caylee Chan
 # Created: 8 July 2025
-# Updated: 23 Jan 2026
+# Updated: 1 June 2026
 # Notes:
 
 
@@ -256,10 +256,17 @@ ggsave(
   plot = NH3_N_PO4_TSS_plots_byepiweek,
   filename = "figures/manuscript/Exp2_water_quality_all.jpeg",
   device ="jpeg",
-  units = "mm",
-  height = 180, width = 88, dpi = 300
+  units = "cm",
+  height = 20, width = 8.5, dpi = 300
 )
 
+ggsave(
+  plot = NH3_N_PO4_TSS_plots_byepiweek,
+  filename = "figures/manuscript/Exp2_water_quality_all.pdf",
+  device ="pdf",
+  units = "cm",
+  height = 20, width = 8.5, dpi = 300
+)
 
 #### Raw winglength data ----
 raw_wing <- read.csv("data/Rain gardens/pupal sampling/starvation_resistance/Aurora_2015_starvation_resistance_20241007.csv")

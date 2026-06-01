@@ -1,7 +1,7 @@
 # Experiment #1: ICB analyses (all)
 # Caylee Chan
 # Created: 2 Jan 2025
-# Updated: 22 Jan 2025
+# Updated: 1 June 2026
 # Notes: 
 
 # Libraries:
@@ -681,8 +681,16 @@ ggsave(
   plot = waterdepth_fig,
   filename = "figures/manuscript/Exp1_waterdepth.jpeg",
   device ="jpeg",
-  units = "mm",
-  height = 100, width = 88, dpi = 300
+  units = "cm",
+  height = 8.5, width = 8.5, dpi = 300
+)
+
+ggsave(
+  plot = waterdepth_fig,
+  filename = "figures/manuscript/Exp1_waterdepth.pdf",
+  device ="pdf",
+  units = "cm",
+  height = 8.5, width = 8.5, dpi = 300
 )
 
 #### Data organizing for abundance models ----
@@ -1731,10 +1739,17 @@ ggsave(
   plot = L1L3_fig,
   filename = "figures/manuscript/Exp1_L1L3abundance.jpeg",
   device ="jpeg",
-  units = "mm",
-  height = 100, width = 88, dpi = 300
+  units = "cm",
+  height = 8.5, width = 8.5, dpi = 300
 )
 
+ggsave(
+  plot = L1L3_fig,
+  filename = "figures/manuscript/Exp1_L1L3abundance.pdf",
+  device ="pdf",
+  units = "cm",
+  height = 8.5, width = 8.5, dpi = 300
+)
 
 
 #### Average L4 Abundance by Epiweek ----
@@ -1803,8 +1818,16 @@ ggsave(
   plot = pupae_fig_outlierremoved,
   filename = "figures/manuscript/Exp1_pupaeabundance_no_outlier.jpeg",
   device ="jpeg",
-  units = "mm",
-  height = 100, width = 88, dpi = 300
+  units = "cm",
+  height = 8.5, width = 8.5, dpi = 300
+)
+
+ggsave(
+  plot = pupae_fig_outlierremoved,
+  filename = "figures/manuscript/Exp1_pupaeabundance_no_outlier.pdf",
+  device ="pdf",
+  units = "cm",
+  height = 8.5, width = 8.5, dpi = 300
 )
 
 
@@ -1833,8 +1856,16 @@ ggsave(
   plot = Fig3,
   filename = "figures/manuscript/Figure3.jpeg",
   device ="jpeg",
-  units = "mm",
-  height = 185, width = 180, dpi = 300
+  units = "cm",
+  height = 18, width = 18, dpi = 300
+)
+
+ggsave(
+  plot = Fig3,
+  filename = "figures/manuscript/Figure3.pdf",
+  device ="pdf",
+  units = "cm",
+  height = 18, width = 18, dpi = 300
 )
 
 
@@ -1911,8 +1942,15 @@ ggsave(
   plot = paired_trt_CCBs_abundance,
   filename = "figures/manuscript/Exp1_paired_trt_CCBs_combinedabundance.jpeg",
   device ="jpeg",
-  units = "mm",
-  height = 100, width = 88, dpi = 300
+  units = "cm",
+  height = 8.5, width = 8.5, dpi = 300
 )
 
+ggsave(
+  plot = paired_trt_CCBs_abundance,
+  filename = "figures/manuscript/Exp1_paired_trt_CCBs_combinedabundance.pdf",
+  device ="pdf",
+  units = "cm",
+  height = 8.5, width = 8.5, dpi = 300
+)
 

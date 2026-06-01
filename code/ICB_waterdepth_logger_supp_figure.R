@@ -1,6 +1,6 @@
 # Logger data in 10 CCBs and 10 ICBs
 # Caylee Chan
-# Updated 22 Jan 2026
+# Updated 1 Jun 2026
 # Notes:
 
 
@@ -136,7 +136,11 @@ sensordepth
 ggsave(sensordepth,
        filename = "figures/manuscript/sensordepth.jpeg",
        device = "jpeg",
-       units = "mm", 
-       height = 120, width = 88, dpi = 300)
+       units = "cm", 
+       height = 8.5, width = 8.5, dpi = 300)
 
-
+ggsave(sensordepth,
+       filename = "figures/manuscript/sensordepth.pdf",
+       device = "pdf",
+       units = "cm", 
+       height = 8.5, width = 8.5, dpi = 300)

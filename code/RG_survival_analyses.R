@@ -1,7 +1,7 @@
 # Experiment #2: Starvation resistance analysis
 # Caylee Chan
 # Created: 13 Jan 2025
-# Updated: 23 Jan 2026
+# Updated: 1 Jun 2026
 # Notes: 
 
 
@@ -381,8 +381,15 @@ ggsave(
   plot = Fig6,
   filename = "figures/manuscript/Figure6.jpeg",
   device ="jpeg",
-  units = "mm",
-  height = 185, width = 180, dpi = 300
+  units = "cm",
+  height = 18, width = 18, dpi = 300
 )
 
+ggsave(
+  plot = Fig6,
+  filename = "figures/manuscript/Figure6.pdf",
+  device ="pdf",
+  units = "cm",
+  height = 18, width = 18, dpi = 300
+)
 

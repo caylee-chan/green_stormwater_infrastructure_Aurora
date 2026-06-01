@@ -1,7 +1,7 @@
 # Experiment #1: Adult analyses
 # Caylee Chan
 # Created: 9 Jan 2025
-# Updated: 22 Dec 2025
+# Updated: 1 June 2026
 # Notes: 
 
 
@@ -236,11 +236,17 @@ ggsave(
   plot = adult_prop_change_intact,
   filename = "figures/manuscript/Figure4.jpeg",
   device = "jpeg", 
-  units = "mm", 
-  height = 100, width = 88, dpi = 300
+  units = "cm", 
+  height = 8.5, width = 8.5, dpi = 300
 )
 
-
+ggsave(
+  plot = adult_prop_change_intact,
+  filename = "figures/manuscript/Figure4.pdf",
+  device = "pdf", 
+  units = "cm", 
+  height = 8.5, width = 8.5, dpi = 300
+)
 
 #### Rainfall during pre- and post-construction periods ####
 library(lubridate)
@@ -306,7 +312,14 @@ ggsave(
   plot = precip_13_15,
   filename = "figures/manuscript/precipitation_2013_15.jpeg",
   device = "jpeg", 
-  units = "mm", 
-  height = 100, width = 88, dpi = 300
+  units = "cm", 
+  height = 8.5, width = 8.5, dpi = 300
 )
 
+ggsave(
+  plot = precip_13_15,
+  filename = "figures/manuscript/precipitation_2013_15.pdf",
+  device = "pdf", 
+  units = "cm", 
+  height = 8.5, width = 8.5, dpi = 300
+)

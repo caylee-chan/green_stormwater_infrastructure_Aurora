@@ -1,7 +1,7 @@
 # Experiment #2: RG analyses (catch basins)
 # Caylee Chan
 # Created: 2 Jan 2025
-# Updated: 22 Jan 2026
+# Updated: 1 June 2026
 # Notes: 
 
 # Libraries:
@@ -488,8 +488,16 @@ ggsave(
   plot = Fig5,
   filename = "figures/manuscript/Figure5.jpeg",
   device ="jpeg",
-  units = "mm",
-  height = 120, width = 180, dpi = 300
+  units = "cm",
+  height = 16, width = 18, dpi = 300
+)
+
+ggsave(
+  plot = Fig5,
+  filename = "figures/manuscript/Figure5.pdf",
+  device ="pdf",
+  units = "cm",
+  height = 16, width = 18, dpi = 300
 )
 
 #### Data organizing for abundance models ----
@@ -1126,12 +1134,18 @@ abundance_combo <- L1L3_rg + L4_rg + pupae_rg +
 abundance_combo
 
 
-# Save to Aurora Box folder
 ggsave(
   plot = abundance_combo,
   filename = "figures/manuscript/Exp2_abundance_figs.jpeg",
   device ="jpeg",
-  units = "mm",
-  height = 180, width = 88, dpi = 300
+  units = "cm",
+  height = 20, width = 8.5, dpi = 300
 )
 
+ggsave(
+  plot = abundance_combo,
+  filename = "figures/manuscript/Exp2_abundance_figs.pdf",
+  device ="pdf",
+  units = "cm",
+  height = 20, width = 8.5, dpi = 300
+)
