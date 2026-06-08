@@ -1,7 +1,7 @@
 # Experiment #2: Water quality & wing length analysis
 # Caylee Chan
 # Created: 8 July 2025
-# Updated: 1 June 2026
+# Updated: 8 June 2026
 # Notes:
 
 
@@ -70,7 +70,7 @@ n_distinct(waterqual_clean_wide$CB_ID_G[waterqual_clean_wide$CB_type == "RGO"]) 
 NH3_N_byepiweek <- ggplot(data = subset(waterqual_clean_wide, !is.na(NH3_N)), aes(x = Epiweek, y = NH3_N, color = CB_type, fill = CB_type)) +
   stat_boxplot(geom = "errorbar", width = 0.25, position = position_dodge(0.9), lwd = 0.25) +
   geom_boxplot(outlier.size = 0.25, lwd = 0.25, width = 0.75, outlier.shape = 19, position = position_dodge(0.9)) +  
-  labs(x = "Epiweek", y = "Ammonia Nitrogen (mg/L)") +
+  labs(x = "Epiweek", y = "Ammonia Nitrogen\n(mg/L)") +
   scale_color_manual(values = c("black", "black"), labels = legend_labs, name = "Catch Basin Type") +
   scale_fill_manual(values = legend_colors, labels = legend_labs, name = "Catch Basin Type") +
   figtheme
@@ -130,7 +130,7 @@ NH3_plotting %>%
 PO4_byepiweek <- ggplot(data = subset(waterqual_clean_wide, !is.na(PO4)), aes(x = Epiweek, y = PO4, color = CB_type, fill = CB_type)) +
   stat_boxplot(geom = "errorbar", width = 0.25, position = position_dodge(0.9), lwd = 0.25) +
   geom_boxplot(outlier.size = 0.25, lwd = 0.25, width = 0.75, outlier.shape = 19, position = position_dodge(0.9)) +  
-  labs(x = "Epiweek", y = "Reactive phosohprus (mg/L)") +
+  labs(x = "Epiweek", y = "Reactive phosohprus\n(mg/L)") +
   scale_color_manual(values = c("black", "black"), labels = legend_labs, name = "Catch Basin Type") +
   scale_fill_manual(values = legend_colors, labels = legend_labs, name = "Catch Basin Type") +
   figtheme
@@ -191,7 +191,7 @@ PO4_plotting %>%
 TSS_byepiweek <- ggplot(data = subset(waterqual_clean_wide, !is.na(TSS)), aes(x = Epiweek, y = TSS, color = CB_type, fill = CB_type)) +
   stat_boxplot(geom = "errorbar", width = 0.25, position = position_dodge(0.9), lwd = 0.25) +
   geom_boxplot(outlier.size = 0.25, lwd = 0.25, width = 0.75, outlier.shape = 19, position = position_dodge(0.9)) +  
-  labs(x = "Epiweek", y = "Total Suspended Solids (mg/L)") +
+  labs(x = "Epiweek", y = "Total Suspended Solids\n(mg/L)") +
   scale_color_manual(values = c("black", "black"), labels = legend_labs, name = "Catch Basin Type") +
   scale_fill_manual(values = legend_colors, labels = legend_labs, name = "Catch Basin Type") +
   figtheme
@@ -257,7 +257,7 @@ ggsave(
   filename = "figures/manuscript/Exp2_water_quality_all.jpeg",
   device ="jpeg",
   units = "cm",
-  height = 20, width = 8.5, dpi = 300
+  height = 15, width = 10, dpi = 300
 )
 
 ggsave(
@@ -265,7 +265,7 @@ ggsave(
   filename = "figures/manuscript/Exp2_water_quality_all.pdf",
   device ="pdf",
   units = "cm",
-  height = 20, width = 8.5, dpi = 300
+  height = 15, width = 10, dpi = 300
 )
 
 #### Raw winglength data ----

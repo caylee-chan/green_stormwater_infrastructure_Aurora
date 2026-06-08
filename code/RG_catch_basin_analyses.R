@@ -1,7 +1,7 @@
 # Experiment #2: RG analyses (catch basins)
 # Caylee Chan
 # Created: 2 Jan 2025
-# Updated: 1 June 2026
+# Updated: 8 June 2026
 # Notes: 
 
 # Libraries:
@@ -1128,7 +1128,7 @@ pupae_rg <- ggplot(pupae, aes(x = interTypecbType, y = P_recode, fill = interTyp
 pupae_rg
 
 abundance_combo <- L1L3_rg + L4_rg + pupae_rg +
-  plot_layout(guides = "collect", axis_titles = "collect", nrow = 3) +
+  plot_layout(guides = "collect", axes = "collect", nrow = 3) +
   plot_annotation(tag_levels = "a") & 
   theme(plot.tag.position = c(0.02, 0.97), plot.tag = element_text(size = 9, face = "bold", family = "HelveticaNeueforSAS"))
 abundance_combo
@@ -1139,7 +1139,7 @@ ggsave(
   filename = "figures/manuscript/Exp2_abundance_figs.jpeg",
   device ="jpeg",
   units = "cm",
-  height = 20, width = 8.5, dpi = 300
+  height = 15, width = 10, dpi = 300
 )
 
 ggsave(
@@ -1147,5 +1147,5 @@ ggsave(
   filename = "figures/manuscript/Exp2_abundance_figs.pdf",
   device ="pdf",
   units = "cm",
-  height = 20, width = 8.5, dpi = 300
+  height = 15, width = 10, dpi = 300
 )
