@@ -664,8 +664,8 @@ waterdepth_fig <- ggplot(waterdepthfigure_data, aes(x = Time, y = avg_waterdepth
   stat_boxplot(geom = "errorbar", width = 0.25, position = position_dodge(0.9), lwd = 0.25) +
   geom_boxplot(outlier.size = 0.25, lwd = 0.25, width = 0.75, outlier.shape = 19, position = position_dodge(0.9)) +  
   labs(x = "Construction Period", y = "Average Water Depth (cm)") +
-  scale_color_manual(values = c("black", "black", "black"), labels = legend_labs, name = "Cateh Basin Type") +
-  scale_fill_manual(values = legend_colors, labels = legend_labs, name = "Cateh Basin Type") +
+  scale_color_manual(values = c("black", "black", "black"), labels = legend_labs, name = "Catch Basin Type") +
+  scale_fill_manual(values = legend_colors, labels = legend_labs, name = "Catch Basin Type") +
   scale_x_discrete(labels = c("Pre","Post")) +
   annotate("text", x = 0.7, y = -0.04, label = expression(italic(n) == 173), size = N_size_size, family = "HelveticaNeueforSAS") +
   annotate("text", x = 1, y = -0.04, label = expression(italic(n) == 73), size = N_size_size, family = "HelveticaNeueforSAS") +
