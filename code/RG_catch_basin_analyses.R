@@ -20,7 +20,7 @@ library(extrafont)
 library(ggpubr)
 
 # Set wd
-setwd("C:/Users/cayle.LAPTOP-QMLQMN4A/OneDrive - University of Illinois - Urbana/green_stormwater_infrastructure_Aurora/green_stormwater_infrastructure_Aurora")
+setwd(r"(E:\UIUC OneDrive\green_stormwater_infrastructure_Aurora\green_stormwater_infrastructure_Aurora)")
 
 
 #### Specify plotting elements ----
@@ -458,7 +458,7 @@ mosquitoes_all %>%
 juvenile_pos_interTypecbType <- ggplot(mosquitoes_all, aes(x = interTypecbType, fill = juvenile_pos_factor)) +
   geom_bar(position = "fill", color = "black") +
   labs(x = "Catch Basin Type", y = "Relative Frequency") +
-  scale_fill_manual(values = c("firebrick4","wheat3"), labels = c("Holding\nJuvenile Mosquitoes", "Not Holding\nJuvenile Mosquitoes")) +
+  scale_fill_manual(values = c("firebrick4","wheat3"), labels = c("Holding Culex\nJuvenile Mosquitoes", "Not Holding Culex\nJuvenile Mosquitoes")) +
   scale_x_discrete(labels = c("Control\nConventional", 
                               "Rain Garden\nConventional",
                               "Rain Garden Overflow")) +
@@ -1084,7 +1084,7 @@ CB_labs = c("Control\nConventional", "Rain Garden\nConventional", "Rain Garden\n
 L1L3_rg <- ggplot(L1L3, aes(x = interTypecbType, y = L1L3_recode, fill = interTypecbType, color = interTypecbType)) +
   stat_boxplot(geom = "errorbar", width = 0.25, position = position_dodge(0.9), lwd = 0.25) +
   geom_boxplot(outlier.size = 0.25, lwd = 0.25, width = 0.75, outlier.shape = 19, position = position_dodge(0.9)) +
-  labs(x = "Catch Basin Type", y = "Average 1st to 3rd Instar\nLarval Abundance") +
+  labs(x = "Catch Basin Type", y = "Average Culex 1st to 3rd\nInstar Larval Abundance") +
   scale_color_manual(values = c("black", "black", "black")) +
   scale_fill_manual(values = c("grey27", "green4", "mediumblue")) +
   scale_x_discrete(labels = CB_labs) +
@@ -1101,7 +1101,7 @@ L1L3_rg
 L4_rg <- ggplot(L4, aes(x = interTypecbType, y = L4_recode, fill = interTypecbType, color = interTypecbType)) +
   stat_boxplot(geom = "errorbar", width = 0.25, position = position_dodge(0.9), lwd = 0.25) +
   geom_boxplot(outlier.size = 0.25, lwd = 0.25, width = 0.75, outlier.shape = 19, position = position_dodge(0.9)) +
-  labs(x = "Catch Basin Type", y = "Average 4th Instar\nLarval Abundance") +
+  labs(x = "Catch Basin Type", y = "Average Culex 4th\nInstar Larval Abundance") +
   scale_color_manual(values = c("black", "black", "black")) +
   scale_fill_manual(values = c("grey27", "green4", "mediumblue")) +
   scale_x_discrete(labels = CB_labs) +
@@ -1116,7 +1116,7 @@ L4_rg
 pupae_rg <- ggplot(pupae, aes(x = interTypecbType, y = P_recode, fill = interTypecbType, color = interTypecbType)) +
   stat_boxplot(geom = "errorbar", width = 0.25, position = position_dodge(0.9), lwd = 0.25) +
   geom_boxplot(outlier.size = 0.25, lwd = 0.25, width = 0.75, outlier.shape = 19, position = position_dodge(0.9)) +
-  labs(x = "Catch Basin Type", y = "Average Pupal Abundance") +
+  labs(x = "Catch Basin Type", y = "Average Culex Pupal\nAbundance") +
   scale_color_manual(values = c("black", "black", "black")) +
   scale_fill_manual(values = c("grey27", "green4", "mediumblue")) +
   scale_x_discrete(labels = CB_labs) +

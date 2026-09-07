@@ -1,7 +1,7 @@
 # Experiment #1: ICB analyses (all)
 # Caylee Chan
 # Created: 2 Jan 2025
-# Updated: 1 June 2026
+# Updated: 7 Sep 2026
 # Notes: 
 
 # Libraries:
@@ -20,7 +20,7 @@ library(extrafont)
 
 
 # Set wd
-setwd("C:/Users/cayle.LAPTOP-QMLQMN4A/OneDrive - University of Illinois - Urbana/green_stormwater_infrastructure_Aurora/green_stormwater_infrastructure_Aurora")
+setwd(r"(E:\UIUC OneDrive\green_stormwater_infrastructure_Aurora\green_stormwater_infrastructure_Aurora)")
 
 #### Specify plotting elements ----
 
@@ -492,7 +492,7 @@ mosquitoesfigure_data <- holdingmosquitoes %>%
 mosquitoes_fig <- ggplot(mosquitoesfigure_data, aes(x = Time, y = prop_NOT_holding_mosquitoes, fill = AreaCB_Rclass, color = AreaCB_Rclass)) +
   stat_boxplot(geom = "errorbar", width = 0.25, position = position_dodge(0.9), lwd = 0.25) +
   geom_boxplot(outlier.size = 0.25, lwd = 0.25, width = 0.75, outlier.shape = 19, position = position_dodge(0.9)) +  
-  labs(x = "Construction Period", y = "Proportion of Catch Basins Not Holding\nJuvenile Mosquitoes") +
+  labs(x = "Construction Period", y = "Proportion of Catch Basins Not Holding\nJuvenile Culex Mosquitoes") +
   scale_color_manual(values = c("black", "black", "black"), labels = legend_labs, name = "Catch Basin Type") +
   scale_fill_manual(values = legend_colors, labels = legend_labs, name = "Catch Basin Type") +
   scale_x_discrete(labels = c("Pre","Post")) +
@@ -1690,7 +1690,7 @@ combinedfigure_data <- combined %>%
 combined_fig <- ggplot(combinedfigure_data, aes(x = Time, y = avg_combined, fill = AreaCB_Rclass, color = AreaCB_Rclass)) +
   stat_boxplot(geom = "errorbar", width = 0.25, position = position_dodge(0.9), lwd = 0.25) +
   geom_boxplot(outlier.size = 0.25, lwd = 0.25, width = 0.75, outlier.shape = 19, position = position_dodge(0.9)) +  
-  labs(x = "Construction Period", y = "Average Combined Juvenile Mosquito Abundance") +
+  labs(x = "Construction Period", y = "Average Combined Juvenile Culex Mosquito Abundance") +
   scale_color_manual(values = c("black", "black", "black"), labels = legend_labs, name = "Catch Basin Type") +
   scale_fill_manual(values = legend_colors, labels = legend_labs, name = "Catch Basin Type") +
   scale_x_discrete(labels = c("Pre","Post")) +
@@ -1720,7 +1720,7 @@ L1L3figure_data <- L1L3 %>%
 L1L3_fig <- ggplot(L1L3figure_data, aes(x = Time, y = avg_L1L3, fill = AreaCB_Rclass, color = AreaCB_Rclass)) +
   stat_boxplot(geom = "errorbar", width = 0.25, position = position_dodge(0.9), lwd = 0.25) +
   geom_boxplot(outlier.size = 0.25, lwd = 0.25, width = 0.75, outlier.shape = 19, position = position_dodge(0.9)) +  
-  labs(x = "Construction Period", y = "Average 1st to 3rd Instar Larval Abundance") +
+  labs(x = "Construction Period", y = "Average Culex 1st to 3rd Instar Larval Abundance") +
   scale_color_manual(values = c("black", "black", "black"), labels = legend_labs, name = "Catch Basin Type") +
   scale_fill_manual(values = legend_colors, labels = legend_labs, name = "Catch Basin Type") +
   scale_x_discrete(labels = c("Pre","Post")) +
@@ -1766,7 +1766,7 @@ L4figure_data <- L4 %>%
 L4_fig <- ggplot(L4figure_data, aes(x = Time, y = avg_L4, fill = AreaCB_Rclass, color = AreaCB_Rclass)) +
   stat_boxplot(geom = "errorbar", width = 0.25, position = position_dodge(0.9), lwd = 0.25) +
   geom_boxplot(outlier.size = 0.25, lwd = 0.25, width = 0.75, outlier.shape = 19, position = position_dodge(0.9)) +  
-  labs(x = "Construction Period", y = "Average 4th Instar Larval Abundance") +
+  labs(x = "Construction Period", y = "Average Culex 4th Instar Larval Abundance") +
   scale_color_manual(values = c("black", "black", "black"), labels = legend_labs, name = "Catch Basin Type") +
   scale_fill_manual(values = legend_colors, labels = legend_labs, "Catch Basin Type") +
   scale_x_discrete(labels = c("Pre","Post")) +
@@ -1799,7 +1799,7 @@ pupaefigure_outlier_removed <- pupaefigure_data %>%
 pupae_fig_outlierremoved <- ggplot(pupaefigure_outlier_removed, aes(x = Time, y = avg_pupae, fill = AreaCB_Rclass, color = AreaCB_Rclass)) +
   stat_boxplot(geom = "errorbar", width = 0.25, position = position_dodge(0.9), lwd = 0.25) +
   geom_boxplot(outlier.size = 0.25, lwd = 0.25, width = 0.75, outlier.shape = 19, position = position_dodge(0.9)) +  
-  labs(x = "Construction Period", y = "Average Pupal Abundance") +
+  labs(x = "Construction Period", y = "Average Culex Pupal Abundance") +
   scale_color_manual(values = c("black", "black", "black"), labels = legend_labs, name = "Catch Basin Type") +
   scale_fill_manual(values = legend_colors, labels = legend_labs, name = "Catch Basin Type") +
   scale_x_discrete(labels = c("Pre","Post")) +
@@ -1932,7 +1932,7 @@ paired_trt_CCBs_abundance <- ggplot(trt_CBs_abundance_pre_post_PLOTTING, aes(x =
   geom_point(size = 0.75) +
   scale_x_discrete(labels = c("Pre", "Post")) +
   scale_y_continuous(limits = c(0,1325), breaks = seq(0, 1500, 250)) +
-  labs(x = "Construction Period", y = "Average Combined Juvenile Mosquito\nAbundance by Catch Basin ID") +
+  labs(x = "Construction Period", y = "Average Combined Culex Juvenile\nMosquito Abundance by Catch Basin ID") +
   annotate("text", x = 2.3, y = 0, label = expression(italic(n) == 16), size = N_size_size, family = "HelveticaNeueforSAS") +
   figtheme
 
